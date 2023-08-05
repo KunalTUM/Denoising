@@ -7,6 +7,7 @@ import pickle
 from models import FFDNet
 from losses import mse
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers.schedules import ExponentialDecay
 from tensorflow.keras.callbacks import ModelCheckpoint, CSVLogger, TerminateOnNaN
 from data_generator import DataGenerator
 import matplotlib.pyplot as plt
