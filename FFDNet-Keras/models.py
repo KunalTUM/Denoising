@@ -7,7 +7,7 @@ import tensorflow as tf
 
 class FFDNet(Model):
 	def __init__(self,
-				img_size = (50, 50),
+				img_size = (150, 150),
 				kernel_size = (3, 3),
 				ffdnet_filters = 96,
 				ffdnet_layers = 12,
@@ -44,7 +44,7 @@ class FFDNet(Model):
 
 
 	def __forward(self):
-		inputs = Input(shape=(self.img_size[0] // 2, self.img_size[1] // 2, 15))
+		inputs = Input(shape=(self.img_size[0] // 2, self.img_size[1] // 2, 5))		# made 15 to 5
 		ffdnet_network = self.ffdnet_net(inputs, self.kernel_size, self.ffdnet_filters, self.ffdnet_layers)
 		out = Lambda(upscale_tensor, name='out')(ffdnet_network)
 		outputs = out

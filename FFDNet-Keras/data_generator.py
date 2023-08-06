@@ -13,8 +13,8 @@ class DataGenerator(Sequence):
 				gt_path,
 				batch_size=128,
 				shuffle=True, 
-				patch_size=(50, 50, 3),
-				input_size=(25, 25, 15)):
+				patch_size=(150, 150, 1),		#(50, 50, 3),
+				input_size=(75,75,5)):			#(25, 25, 15)):
 
 		# Initializations
 		super(DataGenerator, self).__init__()
@@ -61,10 +61,11 @@ class DataGenerator(Sequence):
 		# Generate data
 		for i, ID in enumerate(list_IDs_temp):
 			# Store sample
-			X[i, ] = ffdnet_struct(normalize(np.load(self.noisy_path + ID)))
+			X[i, ] = ffdnet_struct(normalize(np.load(os.path.join(self.noisy_path, ID))))
 
 			# Store class
-			y[i, ] = normalize(np.load(self.gt_path + ID.replace('_noisy.png', '_gt.png')))
+			loaded_array = np.load(os.path.join(self.gt_path, ID))
+			y[i, ] = normalize(np.expand_dims(loaded_array, axis=-1))		# .replace('_noisy.png', '_gt.png')
 
 			# poor design LMAO
 		return X, y
