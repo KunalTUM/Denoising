@@ -38,12 +38,12 @@ test_split = 0.1
 checkpoint = 00
 
 # Directories
-noisy_train_path = '/media/samir/Secondary/Denoising/dncnn/test/SIDD/train/noisy/'
-gt_train_path = '/media/samir/Secondary/Denoising/dncnn/test/SIDD/train/gt/'
-noisy_val_path = '/media/samir/Secondary/Denoising/dncnn/test/SIDD/val/noisy/'
-gt_val_path = '/media/samir/Secondary/Denoising/dncnn/test/SIDD/val/gt/'
-model_path = '/media/samir/Secondary/Denoising/ffdnet/models/'
-model_name = 'FFDNet_Default_SIDD_'
+noisy_train_path = '/content/drive/MyDrive/NeoScan/CANDI/input_noisy_slices_one_sample/training_data/'
+gt_train_path = '/content/drive/MyDrive/NeoScan/CANDI/output_slices_one_sample/training_data/'
+noisy_val_path = '/content/drive/MyDrive/NeoScan/CANDI/input_noisy_slices_one_sample/validation_data/'
+gt_val_path = '/content/drive/MyDrive/NeoScan/CANDI/output_slices_one_sample/validation_data/'
+model_path = '/content/drive/MyDrive/NeoScan/CANDI/models/'
+model_name = 'FFDNet'
 
 # Create output directories
 if(not os.path.isdir(model_path) or not os.listdir(model_path)):
@@ -55,13 +55,13 @@ if(not os.path.isdir(model_path) or not os.listdir(model_path)):
     os.makedirs(model_path + '/checkpoints')
 
 # Create train list
-train_names = glob.glob(noisy_train_path + '/*.png')
+train_names = glob.glob(noisy_train_path + '/*.npy')
 num_imgs = len(train_names)
 idx = np.arange(num_imgs)
 train_ids = idx
 
 # Create validation lsit
-val_names = glob.glob(noisy_val_path + '/*.png')
+val_names = glob.glob(noisy_val_path + '/*.npy')
 v_num_imgs = len(val_names)
 idx = np.arange(v_num_imgs)
 val_ids = idx
@@ -92,8 +92,15 @@ model = FFDNet.get_model()
 # Model Summary
 print(model.summary())
 
+initial_learning_rate = 0.1
+lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+    initial_learning_rate,
+    decay_steps=100000,
+    decay_rate=0.96,
+    staircase=True)
+
 # Compile Model
-model.compile(optimizer = Adam(learning_rate=learning_rate, beta_1=0.9, beta_2=0.999, decay=0.0001),
+model.compile(optimizer = Adam(learning_rate=lr_schedule, beta_1=0.9, beta_2=0.999),
                 loss='mean_squared_error')
 callbacks = []
 

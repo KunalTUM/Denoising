@@ -61,10 +61,10 @@ class DataGenerator(Sequence):
 		# Generate data
 		for i, ID in enumerate(list_IDs_temp):
 			# Store sample
-			X[i, ] = ffdnet_struct(normalize(imread(self.noisy_path + ID)))
+			X[i, ] = ffdnet_struct(normalize(np.load(self.noisy_path + ID)))
 
 			# Store class
-			y[i, ] = normalize(imread(self.gt_path + ID.replace('_noisy.png', '_gt.png')))
+			y[i, ] = normalize(np.load(self.gt_path + ID.replace('_noisy.png', '_gt.png')))
 
 			# poor design LMAO
 		return X, y
