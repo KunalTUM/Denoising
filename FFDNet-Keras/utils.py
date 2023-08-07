@@ -189,61 +189,10 @@ def upscale_images(downsampled_patches):
 	return (upscaled)
 
 
-# def upscale_tensor(downsampled_patches):
-#
-# 	# split
-# 	downsampled = tf.split(downsampled_patches, num_or_size_splits = 4, axis=3)
-# 	downsampled1 = downsampled[0]
-# 	downsampled2 = downsampled[1]
-# 	downsampled3 = downsampled[2]
-# 	downsampled4 = downsampled[3]
-#
-# 	# upsample
-# 	upsampled1 = UpSampling2D(size=(2,2))(downsampled1)
-# 	upsampled2 = UpSampling2D(size=(2,2))(downsampled2)
-# 	upsampled3 = UpSampling2D(size=(2,2))(downsampled3)
-# 	upsampled4 = UpSampling2D(size=(2,2))(downsampled4)
-#
-# 	# mask
-# 	downsampled_patches_size = downsampled_patches.shape
-# 	upscaled_image_size = upsampled1.shape
-# 	upscaled_size = (upscaled_image_size[1], upscaled_image_size[2], upscaled_image_size[3])
-#
-# 	mask1 = np.zeros(upscaled_size)
-# 	mask2 = np.zeros(upscaled_size)
-# 	mask3 = np.zeros(upscaled_size)
-# 	mask4 = np.zeros(upscaled_size)
-#
-# 	for i in range(downsampled_patches_size[1]):
-# 		for j in range(downsampled_patches_size[2]):
-# 			mask1[2*i, 2*j, :] = 1
-# 			mask2[2*i, 2*j+1, :] = 1
-# 			mask3[2*i+1, 2*j, :] = 1
-# 			mask4[2*i+1, 2*j+1, :] = 1
-#
-# 	mask1 = tf.convert_to_tensor(mask1, dtype=tf.float32)
-# 	mask2 = tf.convert_to_tensor(mask2, dtype=tf.float32)
-# 	mask3 = tf.convert_to_tensor(mask3, dtype=tf.float32)
-# 	mask4 = tf.convert_to_tensor(mask4, dtype=tf.float32)
-#
-# 	# multiply
-# 	masked1 = tf.math.multiply(upsampled1, mask1)
-# 	masked2 = tf.math.multiply(upsampled2, mask2)
-# 	masked3 = tf.math.multiply(upsampled3, mask3)
-# 	masked4 = tf.math.multiply(upsampled4, mask4)
-#
-# 	# add
-# 	out = tf.math.add(masked1, masked2)
-# 	out = tf.math.add(out, masked3)
-# 	out = tf.math.add(out, masked4)
-#
-# 	return (out)
-
-
 def upscale_tensor(downsampled_patches):
-    # split
+	# split
     downsampled = tf.split(downsampled_patches, num_or_size_splits = 4, axis=3)
-    downsampled1 = downsampled[0]
+	downsampled1 = downsampled[0]
     downsampled2 = downsampled[1]
     downsampled3 = downsampled[2]
     downsampled4 = downsampled[3]
@@ -254,14 +203,12 @@ def upscale_tensor(downsampled_patches):
     upsampled3 = UpSampling2D(size=(2,2))(downsampled3)
     upsampled4 = UpSampling2D(size=(2,2))(downsampled4)
 
-    # Create masks with TensorFlow operations
-    # Note: this assumes that the upsampled images have even dimensions
-    # Alternating pattern along the height and width
+    # Create masks
     pattern = tf.constant([[1, 0], [0, 1]], dtype=tf.float32)
     shape = tf.shape(upsampled1, out_type=tf.int32)
     mask = tf.tile(pattern, [shape[1]//2, shape[2]//2])
     mask = tf.expand_dims(mask, axis=0)
-    mask = tf.expand_dims(mask, axis=-1)  # add extra dimension to match the number of channels
+    mask = tf.expand_dims(mask, axis=-1)  # adding extra dimension to match the number of channels
 
     mask1 = mask
     mask2 = 1 - mask
@@ -282,14 +229,13 @@ def upscale_tensor(downsampled_patches):
     return (out)
 
 
-
 def noise_map(patch):
 	# https://www.sciencedirect.com/science/article/abs/pii/S1077314296900600
 	patch_size = patch.shape
 
-	M = [[1, -2, 1], [-2, 4, -2], [1, -2, 1]]
+	m = [[1, -2, 1], [-2, 4, -2], [1, -2, 1]]
 
-	sigma_r = np.sum(np.sum(np.absolute(convolve2d(patch[:, :], M))))
+	sigma_r = np.sum(np.sum(np.absolute(convolve2d(patch[:, :], m))))
 	# sigma_g = np.sum(np.sum(np.absolute(convolve2d(patch[:, :, 1], M))))
 	# sigma_b = np.sum(np.sum(np.absolute(convolve2d(patch[:, :, 2], M))))
 

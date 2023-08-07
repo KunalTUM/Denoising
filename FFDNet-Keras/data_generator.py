@@ -13,8 +13,8 @@ class DataGenerator(Sequence):
 				gt_path,
 				batch_size=128,
 				shuffle=True, 
-				patch_size=(150, 150, 1),		#(50, 50, 3),
-				input_size=(75,75,5)):			#(25, 25, 15)):
+				patch_size=(150, 150, 1),		#changing from (50, 50, 3), to (150, 150, 1),
+				input_size=(75,75,5)):			#changing from (25, 25, 15)): to (75,75,5)):
 
 		# Initializations
 		super(DataGenerator, self).__init__()
@@ -65,7 +65,7 @@ class DataGenerator(Sequence):
 
 			# Store class
 			loaded_array = np.load(os.path.join(self.gt_path, ID))
-			y[i, ] = normalize(np.expand_dims(loaded_array, axis=-1))		# .replace('_noisy.png', '_gt.png')
+			y[i, ] = normalize(np.expand_dims(loaded_array, axis=-1))		# removing...  .replace('_noisy.png', '_gt.png')
 
 			# poor design LMAO
 		return X, y
