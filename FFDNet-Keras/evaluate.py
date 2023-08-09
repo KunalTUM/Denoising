@@ -8,8 +8,8 @@ import time
 import glob, os
 
 start_time = time.time()
-patch_size = (50, 50, 3)
-downsampled_patch_size = (25, 25, 15)
+patch_size = (150, 150)
+downsampled_patch_size = (75, 75, 5)
 
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 gpus = tf.config.list_physical_devices('GPU')
@@ -26,43 +26,45 @@ if gpus:
 
 
 # Inputs
-data_path = '/media/samir/Secondary/Datasets/SIDD/SIDD_Small_sRGB_Only/Data/'
-save_path = '/media/samir/Secondary/Denoising/ffdnet results/'
-model_path = '/media/samir/Secondary/Denoising/ffdnet/models/models/FFDNet_Default_SIDD_20211116-044556.h5'
+data_path = r"D:\Kunal\NeoScan\CANDI\input_noisy_slices\validation_data"
+save_path = r"D:\Kunal\NeoScan\CANDI\input_noisy_slices\training_data"
+model_path = r'D:\Kunal\NeoScan\Denoising-main/FFDNet_Default_SIDD_20211116-044556.h5'
 
 # Loading Model
 FFDNet = FFDNet()
 model = FFDNet.get_model()
-model.load_weights(model_path)
+# model.load_weights(model_path)
 
 # Evaluation Loop
 dirs = os.listdir(data_path)
 num_images = len(dirs)
-for i in range(num_images):
+for i in range(1):
     print("FFDNet Denoising Image:", i+1)
-    folder_path = data_path + dirs[i]
+    folder_path = data_path # + dirs[i]
+
     
     save_folder_path = save_path + dirs[i]
     if(not os.path.isdir(save_folder_path)):
         os.makedirs(save_folder_path)
 
     # Split Image into Patches
-    noisy = normalize(imread(folder_path + '/NOISY_SRGB_010.PNG'))
+    noisy = (np.load(os.path.join(folder_path, 'normalized_data_71_60.npy')))
     noisy_patches = img_to_patches(noisy, patch_size)
 
     # Downsample Patches and Noise Map
     downsampled_stack = np.zeros((noisy_patches.shape[0], *downsampled_patch_size))
     for j in range(noisy_patches.shape[0]):
-        fs = ffdnet_struct(noisy_patches[j, :, :, :])
+        fs = ffdnet_struct(noisy_patches[j, :, :])
         downsampled_stack[j, :, :, :] = fs
 
     # Predict Output
     denoised = model.predict(downsampled_stack)
     denoised = np.squeeze(denoised)
+    print(np.max(denoised))
 
     # Convert Patches into Image
     denoised = patches_to_img(denoised, noisy.shape)
-    imwrite(save_folder_path + '/DENOISED_SRGB_010.PNG', denormalize(denoised))
+    np.save(save_folder_path + '/normalized_data_71_60_test.npy')      # denormalize(denoised)
 
 print("Execution Time: %s s" % (time.time() - start_time))
 

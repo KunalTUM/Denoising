@@ -27,7 +27,7 @@ if gpus:
 
 # Defaults
 n_channels = 3
-batch_size = 128
+batch_size = 4
 epochs = 80
 learning_rate = 1e-5
 model_loss = 'mse'
@@ -44,6 +44,13 @@ noisy_val_path = r"D:\Kunal\NeoScan\CANDI\input_noisy_slices\validation_data"
 gt_val_path = r"D:\Kunal\NeoScan\CANDI\output_slices\validation_data"
 model_path = r"D:\Kunal\NeoScan\CANDI\output_slices\models"
 model_name = 'FFDNet'
+
+# noisy_train_path = "/content/drive/MyDrive/NeoScan/CANDI/input_noisy_slices_one_sample/training_data"
+# gt_train_path = "/content/drive/MyDrive/NeoScan/CANDI/output_slices_one_sample/training_data"
+# noisy_val_path = "/content/drive/MyDrive/NeoScan/CANDI/input_noisy_slices_one_sample/validation_data"
+# gt_val_path = "/content/drive/MyDrive/NeoScan/CANDI/output_slices_one_sample/validation_data"
+# model_path = "/content/drive/MyDrive/NeoScan/CANDI/models"
+# model_name = 'FFDNet'
 
 # Create output directories
 if(not os.path.isdir(model_path) or not os.listdir(model_path)):
@@ -92,7 +99,7 @@ model = FFDNet.get_model()
 # Model Summary
 print(model.summary())
 
-initial_learning_rate = 0
+initial_learning_rate = 0.1
 lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
     initial_learning_rate,
     decay_steps=100000,

@@ -39,7 +39,7 @@ class FFDNet(Model):
 		conv1 = self.conv_block(input_tensor, kernel_size, ffdnet_filters, normalization_flag=False)
 		for i in range(2, ffdnet_layers):
 			conv1 = self.conv_block(conv1, kernel_size, ffdnet_filters)
-		conv2 = Conv2D(filters=12, kernel_size=kernel_size, padding='same')(conv1)
+		conv2 = Conv2D(filters=4, kernel_size=kernel_size, padding='same')(conv1)
 		return (conv2)
 
 

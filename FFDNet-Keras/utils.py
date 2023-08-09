@@ -101,10 +101,10 @@ def img_to_patches(img, patch_size):
     m = int(ceil(img_size[0]/patch_size[0]))
     n = int(ceil(img_size[1]/patch_size[1]))
 
-    img_new_size = (patch_size[0] * m, patch_size[1] * n, patch_size[2])
+    img_new_size = (patch_size[0] * m, patch_size[1] * n)
 
     padding = tuple(np.subtract(img_new_size, img_size))
-    padding_full = ((0, padding[0]), (0, padding[1]), (0, padding[2]))
+    padding_full = ((0, padding[0]), (0, padding[1]))       # (0, padding[2])
 
     padded = np.pad(img, pad_width = padding_full, mode='reflect')
 
@@ -118,8 +118,8 @@ def img_to_patches(img, patch_size):
             bbox2 = (i+1) * patch_size[0]
             bbox3 = j * patch_size[1]
             bbox4 = (j+1) * patch_size[1]
-            patch = padded[bbox1:bbox2, bbox3:bbox4, :]
-            patches[n * i + j, :, :, :] = patch
+            patch = padded[bbox1:bbox2, bbox3:bbox4]
+            patches[n * i + j, :, :] = patch
 
     return (patches)
 
@@ -127,11 +127,11 @@ def img_to_patches(img, patch_size):
 def patches_to_img(patches, img_size):
     # converts patches to image to be used during evaluation
     patch_size = patches.shape
-    patch_size = (patch_size[1], patch_size[2], patch_size[3])
+    patch_size = (patch_size[1], patch_size[2])
 
     m = int(ceil(img_size[0]/patch_size[0]))
     n = int(ceil(img_size[1]/patch_size[1]))
-    padded = np.zeros((m*patch_size[0], n*patch_size[1], patch_size[2]))
+    padded = np.zeros((m*patch_size[0], n*patch_size[1]))
 
     for i in range(m):
         for j in range(n):
@@ -139,10 +139,10 @@ def patches_to_img(patches, img_size):
             bbox2 = (i+1) * patch_size[0]
             bbox3 = j * patch_size[1]
             bbox4 = (j+1) * patch_size[1]
-            patch = patches[n * i + j, :, :, :]
-            padded[bbox1:bbox2, bbox3:bbox4, :] = patch
+            patch = patches[n * i + j, :, :]
+            padded[bbox1:bbox2, bbox3:bbox4] = patch
 
-    img = padded[0:(img_size[0]), 0:(img_size[1]), 0:(img_size[2])]
+    img = padded[0:(img_size[0]), 0:(img_size[1])]
 
     return (img)
 

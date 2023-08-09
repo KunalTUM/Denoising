@@ -61,11 +61,11 @@ class DataGenerator(Sequence):
 		# Generate data
 		for i, ID in enumerate(list_IDs_temp):
 			# Store sample
-			X[i, ] = ffdnet_struct(normalize(np.load(os.path.join(self.noisy_path, ID))))
+			X[i, ] = ffdnet_struct((np.load(os.path.join(self.noisy_path, ID))))
 
 			# Store class
 			loaded_array = np.load(os.path.join(self.gt_path, ID))
-			y[i, ] = normalize(np.expand_dims(loaded_array, axis=-1))		# removing...  .replace('_noisy.png', '_gt.png')
+			y[i, ] = (np.expand_dims(loaded_array, axis=-1))		# removing...  .replace('_noisy.png', '_gt.png')
 
 			# poor design LMAO
 		return X, y
