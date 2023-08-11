@@ -38,19 +38,19 @@ test_split = 0.1
 checkpoint = 00
 
 # Directories
-noisy_train_path = r"D:\Kunal\NeoScan\CANDI\input_noisy_slices\training_data"
-gt_train_path = r"D:\Kunal\NeoScan\CANDI\output_slices\training_data"
-noisy_val_path = r"D:\Kunal\NeoScan\CANDI\input_noisy_slices\validation_data"
-gt_val_path = r"D:\Kunal\NeoScan\CANDI\output_slices\validation_data"
-model_path = r"D:\Kunal\NeoScan\CANDI\output_slices\models"
-model_name = 'FFDNet'
-
-# noisy_train_path = "/content/drive/MyDrive/NeoScan/CANDI/input_noisy_slices_one_sample/training_data"
-# gt_train_path = "/content/drive/MyDrive/NeoScan/CANDI/output_slices_one_sample/training_data"
-# noisy_val_path = "/content/drive/MyDrive/NeoScan/CANDI/input_noisy_slices_one_sample/validation_data"
-# gt_val_path = "/content/drive/MyDrive/NeoScan/CANDI/output_slices_one_sample/validation_data"
-# model_path = "/content/drive/MyDrive/NeoScan/CANDI/models"
+# noisy_train_path = r"D:\Kunal\NeoScan\CANDI\input_noisy_slices\training_data"
+# gt_train_path = r"D:\Kunal\NeoScan\CANDI\output_slices\training_data"
+# noisy_val_path = r"D:\Kunal\NeoScan\CANDI\input_noisy_slices\validation_data"
+# gt_val_path = r"D:\Kunal\NeoScan\CANDI\output_slices\validation_data"
+# model_path = r"D:\Kunal\NeoScan\CANDI\output_slices\models"
 # model_name = 'FFDNet'
+
+noisy_train_path = "/content/drive/MyDrive/NeoScan/CANDI/input_noisy_slices_one_sample/training_data"
+gt_train_path = "/content/drive/MyDrive/NeoScan/CANDI/output_slices_one_sample/training_data"
+noisy_val_path = "/content/drive/MyDrive/NeoScan/CANDI/input_noisy_slices_one_sample/validation_data"
+gt_val_path = "/content/drive/MyDrive/NeoScan/CANDI/output_slices_one_sample/validation_data"
+model_path = "/content/drive/MyDrive/NeoScan/CANDI/models"
+model_name = 'FFDNet'
 
 # Create output directories
 if(not os.path.isdir(model_path) or not os.listdir(model_path)):
