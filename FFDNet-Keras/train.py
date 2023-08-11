@@ -99,7 +99,7 @@ model = FFDNet.get_model()
 # Model Summary
 print(model.summary())
 
-initial_learning_rate = 0.1
+initial_learning_rate = learning_rate
 lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
     initial_learning_rate,
     decay_steps=100000,
