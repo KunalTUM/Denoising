@@ -110,20 +110,20 @@ lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
 # Compile Model
 model.compile(optimizer = Adam(learning_rate=lr_schedule, beta_1=0.9, beta_2=0.999),
                 loss='mean_squared_error')
-callbacks = []
+# callbacks = []
 
 # Tensorboard
-tensorboard_name = "denoising_FFDNet"
-tensorboard = TensorBoard(log_dir="logs/{}".format(tensorboard_name))
+callback_name = "denoising-FFDNet-{}".format(int(time.time()))
+tensorboard = TensorBoard(log_dir="logs/{}".format(callback_name))
 
 # CSV Logger
-callbacks.append(CSVLogger(model_path + '/logs/' + model_name + '.csv'))
+# callbacks.append(CSVLogger(model_path + '/logs/' + model_name + '.csv'))
 
 # Model Checkpoints
-callbacks.append(ModelCheckpoint(model_path + '/checkpoints/' + 'epoch-{epoch:02d}/' + model_name + '.h5', monitor=monitor, save_freq=100))
+# callbacks.append(ModelCheckpoint(model_path + '/checkpoints/' + 'epoch-{epoch:02d}/' + model_name + '.h5', monitor=monitor, save_freq=100))
 
 # Stop on NaN
-callbacks.append(TerminateOnNaN())
+# callbacks.append(TerminateOnNaN())
 
 # Fit model
 start_time = time.time()
