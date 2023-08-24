@@ -8,7 +8,7 @@ from models import FFDNet
 from losses import mse
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
-from tensorflow.keras.callbacks import ModelCheckpoint, CSVLogger, TerminateOnNaN
+from tensorflow.keras.callbacks import ModelCheckpoint, CSVLogger, TerminateOnNaN, TensorBoard
 from data_generator import DataGenerator
 import matplotlib.pyplot as plt
 
@@ -26,9 +26,9 @@ if gpus:
         print(e)
 
 # Defaults
-n_channels = 3
+n_channels = 1
 batch_size = 4
-epochs = 80
+epochs = 3
 learning_rate = 1e-5
 model_loss = 'mse'
 monitor = 'val_loss'
@@ -37,20 +37,21 @@ validation_split = 0.1
 test_split = 0.1
 checkpoint = 00
 
-# Directories
-# noisy_train_path = r"D:\Kunal\NeoScan\CANDI\input_noisy_slices\training_data"
-# gt_train_path = r"D:\Kunal\NeoScan\CANDI\output_slices\training_data"
-# noisy_val_path = r"D:\Kunal\NeoScan\CANDI\input_noisy_slices\validation_data"
-# gt_val_path = r"D:\Kunal\NeoScan\CANDI\output_slices\validation_data"
-# model_path = r"D:\Kunal\NeoScan\CANDI\output_slices\models"
-# model_name = 'FFDNet'
-
-noisy_train_path = "/content/drive/MyDrive/NeoScan/CANDI/input_noisy_slices_one_sample/training_data"
-gt_train_path = "/content/drive/MyDrive/NeoScan/CANDI/output_slices_one_sample/training_data"
-noisy_val_path = "/content/drive/MyDrive/NeoScan/CANDI/input_noisy_slices_one_sample/validation_data"
-gt_val_path = "/content/drive/MyDrive/NeoScan/CANDI/output_slices_one_sample/validation_data"
-model_path = "/content/drive/MyDrive/NeoScan/CANDI/models"
+# Directories (local)
+noisy_train_path = r"D:\Kunal\NeoScan\CANDI\input_noisy_slices\training_data"
+gt_train_path = r"D:\Kunal\NeoScan\CANDI\output_slices\training_data"
+noisy_val_path = r"D:\Kunal\NeoScan\CANDI\input_noisy_slices\validation_data"
+gt_val_path = r"D:\Kunal\NeoScan\CANDI\output_slices\validation_data"
+model_path = r"D:\Kunal\NeoScan\CANDI\output_slices\models"
 model_name = 'FFDNet'
+
+# Directories (google colab)
+# noisy_train_path = "/content/drive/MyDrive/NeoScan/CANDI/input_noisy_slices_one_sample/training_data"
+# gt_train_path = "/content/drive/MyDrive/NeoScan/CANDI/output_slices_one_sample/training_data"
+# noisy_val_path = "/content/drive/MyDrive/NeoScan/CANDI/input_noisy_slices_one_sample/validation_data"
+# gt_val_path = "/content/drive/MyDrive/NeoScan/CANDI/output_slices_one_sample/validation_data"
+# model_path = "/content/drive/MyDrive/NeoScan/CANDI/models"
+# model_name = 'FFDNet'
 
 # Create output directories
 if(not os.path.isdir(model_path) or not os.listdir(model_path)):
@@ -111,6 +112,10 @@ model.compile(optimizer = Adam(learning_rate=lr_schedule, beta_1=0.9, beta_2=0.9
                 loss='mean_squared_error')
 callbacks = []
 
+# Tensorboard
+tensorboard_name = "denoising_FFDNet"
+tensorboard = TensorBoard(log_dir="logs/{}".format(tensorboard_name))
+
 # CSV Logger
 callbacks.append(CSVLogger(model_path + '/logs/' + model_name + '.csv'))
 
@@ -128,7 +133,7 @@ model_history = model.fit(train_gen,
                                     steps_per_epoch=len(train_ids)//batch_size,
                                     validation_data=val_gen, 
                                     validation_steps=len(val_ids)//batch_size,
-                                    verbose=1, epochs=epochs, callbacks=callbacks)
+                                    verbose=1, epochs=epochs, callbacks=tensorboard)
 print("...Finished Training")
 
 elapsed_time = time.time() - start_time
