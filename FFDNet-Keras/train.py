@@ -28,7 +28,7 @@ if gpus:
 # Defaults
 n_channels = 1
 batch_size = 4
-epochs = 3
+epochs = 80
 learning_rate = 1e-5
 model_loss = 'mse'
 monitor = 'val_loss'
